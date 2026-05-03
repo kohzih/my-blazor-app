@@ -1,0 +1,22 @@
+@using MyBlazorApp.Models
+
+@* 孫コンポーネント: 親（UserPanel）から明示的にパラメータを渡されていませんが、
+   祖先の <CascadingValue> スコープ内にあるため、[CascadingParameter] で自動的に値を受け取れます。
+   何階層でも伝播するのが CascadingParameter の特徴です。 *@
+
+<div class="badge-box" style="background-color: @UserContext?.ThemeColor; color: white; padding: 0.8rem 1.2rem; border-radius: 6px; display: inline-block; margin-top: 0.5rem;">
+    <h5 style="margin: 0 0 0.4rem 0;">🟩 孫コンポーネント（UserBadge）</h5>
+    <p style="margin: 0; font-size: 0.9rem;">
+        @UserContext?.UserName（@UserContext?.Role）
+        @if (UserContext?.IsAdmin ?? false)
+        {
+            <span style="margin-left: 0.5rem; background: white; color: @UserContext.ThemeColor; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem;">ADMIN</span>
+        }
+    </p>
+</div>
+
+@code {
+    // 型が一致する CascadingValue を祖先コンポーネントから自動受信します
+    [CascadingParameter]
+    public UserContext? UserContext { get; set; }
+}

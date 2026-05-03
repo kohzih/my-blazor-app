@@ -1,0 +1,27 @@
+@using MyBlazorApp.Models
+
+@* 子コンポーネント: [CascadingParameter] を宣言するだけで、
+   親の <CascadingValue> から値が自動的に届きます。
+   通常の [Parameter] のように親側で明示的に属性指定する必要はありません。 *@
+
+<div class="panel" style="border: 2px solid @UserContext?.ThemeColor; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+    <h4 style="color: @UserContext?.ThemeColor">🟦 子コンポーネント（UserPanel）</h4>
+    <p>CascadingParameter で受け取ったユーザー情報：</p>
+    <ul>
+        <li>ユーザー名: <strong>@UserContext?.UserName</strong></li>
+        <li>ロール: <strong>@UserContext?.Role</strong></li>
+        <li>管理者: <strong>@(UserContext?.IsAdmin ?? false ? "はい" : "いいえ")</strong></li>
+    </ul>
+
+    <p>↓ さらに孫コンポーネントへも自動伝播します（追加のパラメータ渡し不要）</p>
+
+    @* UserBadge へは何も渡していませんが、CascadingValue のスコープ内にあるため
+       自動的に UserContext を受け取れます。これが CascadingParameter の最大の利点です。 *@
+    <UserBadge />
+</div>
+
+@code {
+    // CascadingParameter: 型で照合されるため、名前の指定は不要です
+    [CascadingParameter]
+    public UserContext? UserContext { get; set; }
+}

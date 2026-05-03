@@ -1,0 +1,46 @@
+@page "/cascading-demo"
+@using MyBlazorApp.Models
+
+@* CascadingValue を使うと、このコンポーネントの子孫全体に値を伝播できます。
+   通常の [Parameter] と異なり、中間コンポーネントで受け渡しコードを書く必要がありません。 *@
+
+<h3>CascadingParameter デモ</h3>
+<p>親コンポーネントで設定したユーザー情報が、子・孫コンポーネントへ自動的に伝播します。</p>
+
+<div class="demo-controls">
+    <h4>👤 ユーザー設定（親コンポーネント）</h4>
+    <div class="form-group">
+        <label>ユーザー名</label>
+        <input class="form-input" @bind="currentUser.UserName" @bind:event="oninput" />
+    </div>
+    <div class="form-group">
+        <label>ロール</label>
+        <select class="form-input" @bind="currentUser.Role">
+            <option value="Admin">Admin</option>
+            <option value="User">User</option>
+            <option value="Guest">Guest</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label>テーマカラー</label>
+        <input type="color" @bind="currentUser.ThemeColor" @bind:event="oninput" />
+    </div>
+</div>
+
+<hr />
+
+@* CascadingValue の Value に渡したオブジェクトが、ツリー内のすべての子孫コンポーネントへ
+   自動的に届きます。子側では [CascadingParameter] 属性で受け取るだけです。 *@
+<CascadingValue Value="currentUser">
+    <UserPanel />
+</CascadingValue>
+
+@code {
+    // 初期値を持つ UserContext を生成。入力に応じてリアルタイムに子・孫へ伝播します。
+    private UserContext currentUser = new UserContext
+    {
+        UserName = "田中 太郎",
+        Role = "Admin",
+        ThemeColor = "#0078d4"
+    };
+}
