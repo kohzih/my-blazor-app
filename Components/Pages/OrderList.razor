@@ -1,0 +1,85 @@
+@page "/orders"
+@using MyBlazorApp.Models
+
+<h3>注文一覧</h3>
+
+<table class="order-table">
+    <thead>
+        <tr>
+            <th>注文ID</th>
+            <th>顧客名</th>
+            <th>商品名</th>
+            <th>数量</th>
+            <th>単価</th>
+            <th>注文日</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in orders)
+        {
+            <tr>
+                <td>@order.OrderId</td>
+                <td>@order.CustomerName</td>
+                <td>@order.ProductName</td>
+                <td>@order.Quantity</td>
+                <td>@order.UnitPrice.ToString("C")</td>
+                <td>@order.OrderDate.ToString("yyyy/MM/dd")</td>
+                <td><button class="btn-detail" @onclick="() => OpenDetail(order)">詳細</button></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (showDetail)
+{
+    <OrderDetail
+        Order="selectedOrder"
+        OnClose="CloseDetail"
+        OnSaved="HandleSaved" />
+}
+
+@code {
+    private List<Order> orders = new();
+    private Order? selectedOrder;
+    private bool showDetail = false;
+
+    protected override void OnInitialized()
+    {
+        orders = new List<Order>
+        {
+            new Order { OrderId = 1, CustomerName = "田中 太郎", ProductName = "ノートPC", Quantity = 1, UnitPrice = 120000, OrderDate = new DateTime(2026, 1, 10) },
+            new Order { OrderId = 2, CustomerName = "鈴木 花子", ProductName = "マウス", Quantity = 2, UnitPrice = 3500, OrderDate = new DateTime(2026, 1, 15) },
+            new Order { OrderId = 3, CustomerName = "佐藤 次郎", ProductName = "キーボード", Quantity = 1, UnitPrice = 8000, OrderDate = new DateTime(2026, 1, 20) },
+            new Order { OrderId = 4, CustomerName = "高橋 三郎", ProductName = "モニター", Quantity = 2, UnitPrice = 45000, OrderDate = new DateTime(2026, 2, 5) },
+            new Order { OrderId = 5, CustomerName = "伊藤 四郎", ProductName = "USBハブ", Quantity = 3, UnitPrice = 2500, OrderDate = new DateTime(2026, 2, 12) },
+            new Order { OrderId = 6, CustomerName = "渡辺 五郎", ProductName = "Webカメラ", Quantity = 1, UnitPrice = 9800, OrderDate = new DateTime(2026, 2, 20) },
+            new Order { OrderId = 7, CustomerName = "山本 六子", ProductName = "ヘッドセット", Quantity = 1, UnitPrice = 15000, OrderDate = new DateTime(2026, 3, 1) },
+            new Order { OrderId = 8, CustomerName = "中村 七海", ProductName = "外付けSSD", Quantity = 2, UnitPrice = 12000, OrderDate = new DateTime(2026, 3, 8) },
+        };
+    }
+
+    private void OpenDetail(Order order)
+    {
+        selectedOrder = new Order
+        {
+            OrderId = order.OrderId,
+            CustomerName = order.CustomerName,
+            ProductName = order.ProductName,
+            Quantity = order.Quantity,
+            UnitPrice = order.UnitPrice,
+            OrderDate = order.OrderDate
+        };
+        showDetail = true;
+    }
+
+    private void CloseDetail() => showDetail = false;
+
+    private async Task HandleSaved(Order updatedOrder)
+    {
+        var index = orders.FindIndex(o => o.OrderId == updatedOrder.OrderId);
+        if (index >= 0) orders[index] = updatedOrder;
+        showDetail = false;
+        await Task.CompletedTask;
+    }
+}

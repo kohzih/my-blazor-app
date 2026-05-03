@@ -1,0 +1,48 @@
+@using MyBlazorApp.Models
+
+<div class="modal-overlay">
+    <div class="modal-content">
+        <h4>注文詳細（注文ID: @Order?.OrderId）</h4>
+
+        @if (Order is not null)
+        {
+            <div class="form-group">
+                <label>顧客名</label>
+                <input class="form-input" @bind="Order.CustomerName" />
+            </div>
+            <div class="form-group">
+                <label>商品名</label>
+                <input class="form-input" @bind="Order.ProductName" />
+            </div>
+            <div class="form-group">
+                <label>数量</label>
+                <input class="form-input" type="number" @bind="Order.Quantity" />
+            </div>
+            <div class="form-group">
+                <label>単価</label>
+                <input class="form-input" type="number" @bind="Order.UnitPrice" />
+            </div>
+            <div class="form-group">
+                <label>注文日</label>
+                <span>@Order.OrderDate.ToString("yyyy/MM/dd")</span>
+            </div>
+        }
+
+        <div class="modal-buttons">
+            <button class="btn-save" @onclick="Save">保存</button>
+            <button class="btn-close" @onclick="() => OnClose.InvokeAsync()">閉じる</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public Order? Order { get; set; }
+    [Parameter] public EventCallback OnClose { get; set; }
+    [Parameter] public EventCallback<Order> OnSaved { get; set; }
+
+    private async Task Save()
+    {
+        if (Order is not null)
+            await OnSaved.InvokeAsync(Order);
+    }
+}
