@@ -177,3 +177,17 @@ h1:focus {
 .btn-close:hover {
     background-color: #a42d00;
 }
+
+/* ===== CascadingParameter デモ ===== */
+.demo-controls {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.demo-controls h4 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+}
