@@ -75,11 +75,10 @@
 
     private void CloseDetail() => showDetail = false;
 
-    private async Task HandleSaved(Order updatedOrder)
+    private void HandleSaved(Order updatedOrder)
     {
         var index = orders.FindIndex(o => o.OrderId == updatedOrder.OrderId);
         if (index >= 0) orders[index] = updatedOrder;
         showDetail = false;
-        await Task.CompletedTask;
     }
 }
